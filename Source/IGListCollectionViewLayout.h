@@ -90,7 +90,13 @@ NS_SWIFT_NAME(ListCollectionViewLayout)
  */
 - (instancetype)initWithStickyHeaders:(BOOL)stickyHeaders
                       topContentInset:(CGFloat)topContentInset
-                        stretchToEdge:(BOOL)stretchToEdge NS_DESIGNATED_INITIALIZER;
+                        stretchToEdge:(BOOL)stretchToEdge;
+
+- (instancetype)initWithStickyHeaders:(BOOL)stickyHeaders
+                      topContentInset:(CGFloat)topContentInset
+                        stretchToEdge:(BOOL)stretchToEdge
+                         verticalMode:(BOOL)isVerticalMode;
+
 
 /**
  :nodoc:

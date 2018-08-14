@@ -77,6 +77,7 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
 @property (nonatomic, assign, readonly) BOOL stickyHeaders;
 @property (nonatomic, assign, readonly) CGFloat topContentInset;
 @property (nonatomic, assign, readonly) BOOL stretchToEdge;
+@property (nonatomic, assign, readonly) BOOL isVerticalMode;
 
 @end
 
@@ -101,6 +102,13 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
 - (instancetype)initWithStickyHeaders:(BOOL)stickyHeaders
                       topContentInset:(CGFloat)topContentInset
                         stretchToEdge:(BOOL)stretchToEdge {
+    return [self initWithStickyHeaders:stickyHeaders topContentInset:topContentInset stretchToEdge:stretchToEdge verticalMode:NO];
+}
+
+- (instancetype)initWithStickyHeaders:(BOOL)stickyHeaders
+                      topContentInset:(CGFloat)topContentInset
+                        stretchToEdge:(BOOL)stretchToEdge
+                         verticalMode:(BOOL)isVerticalMode {
     if (self = [super init]) {
         _stickyHeaders = stickyHeaders;
         _topContentInset = topContentInset;
@@ -108,8 +116,10 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
         _attributesCache = [NSMutableDictionary new];
         _headerAttributesCache = [NSMutableDictionary new];
         _cachedLayoutInvalid = YES;
+        _isVerticalMode = isVerticalMode;
     }
     return self;
+    
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -391,12 +401,22 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
                                                                      itemWidth,
                                                                      size.height));
             sectionData[section].itemBounds[item] = frame;
-
+            
             // track the max size of the row to find the y of the next row, adjust for top inset while iterating items
             nextRowY = MAX(CGRectGetMaxY(frame) - insets.top, nextRowY);
 
-            // increase the rolling x by the item width and add item spacing for all items on the same row
-            itemX += itemWidth + interitemSpacing;
+            if (self.isVerticalMode && itemCount > 1) {
+                if (item == itemCount - 1) {
+                    itemY -= (itemWidth + lineSpacing) * item;
+                    itemX += itemWidth + interitemSpacing;
+                } else {
+                    itemY += itemWidth + lineSpacing;;
+                }
+
+            } else {
+                // increase the rolling x by the item width and add item spacing for all items on the same row
+                itemX += itemWidth + interitemSpacing;
+            }
 
             // union the rolling section bounds
             if (item == 0) {
