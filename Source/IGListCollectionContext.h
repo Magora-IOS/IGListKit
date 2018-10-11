@@ -1,25 +1,22 @@
 /**
  * Copyright (c) 2016-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 #import <UIKit/UIKit.h>
 
 #import <IGListKit/IGListBatchContext.h>
+#import <IGListKit/IGListCollectionScrollingTraits.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class IGListSectionController;
 
-
-
 /**
  The collection context provides limited access to the collection-related information that
- section controllers need for operations like sizing, dequeing cells, insterting, deleting, reloading, etc.
+ section controllers need for operations like sizing, dequeuing cells, inserting, deleting, reloading, etc.
  */
 NS_SWIFT_NAME(ListCollectionContext)
 @protocol IGListCollectionContext <NSObject>
@@ -35,9 +32,19 @@ NS_SWIFT_NAME(ListCollectionContext)
 @property (nonatomic, readonly) UIEdgeInsets containerInset;
 
 /**
+ The adjusted content insets of the collection view. Equivalent to containerInset under iOS 11.
+ */
+@property (nonatomic, readonly) UIEdgeInsets adjustedContainerInset;
+
+/**
  The size of the collection view with content insets applied.
  */
 @property (nonatomic, readonly) CGSize insetContainerSize;
+
+/**
+ The current scrolling traits of the underlying collection view.
+ */
+@property (nonatomic, readonly) IGListCollectionScrollingTraits scrollingTraits;
 
 /**
  Returns size of the collection view relative to the section controller.
@@ -100,6 +107,36 @@ NS_SWIFT_NAME(ListCollectionContext)
 - (void)deselectItemAtIndex:(NSInteger)index
           sectionController:(IGListSectionController *)sectionController
                    animated:(BOOL)animated;
+
+/**
+ Selects a cell in the collection.
+ 
+ @param index The index of the item to select.
+ @param sectionController The section controller requesting this information.
+ @param animated Pass `YES` to animate the change, `NO` otherwise.
+ @param scrollPosition An option that specifies where the item should be positioned when scrolling finishes.
+ */
+- (void)selectItemAtIndex:(NSInteger)index
+        sectionController:(IGListSectionController *)sectionController
+                 animated:(BOOL)animated
+           scrollPosition:(UICollectionViewScrollPosition)scrollPosition;
+
+/**
+ Dequeues a cell from the collection view reuse pool.
+
+ @param cellClass The class of the cell you want to dequeue.
+ @param reuseIdentifier A reuse identifier for the specified cell. This parameter may be `nil`.
+ @param sectionController The section controller requesting this information.
+ @param index The index of the cell.
+
+ @return A cell dequeued from the reuse pool or a newly created one.
+
+ @note This method uses a string representation of the cell class as the identifier.
+ */
+- (__kindof UICollectionViewCell *)dequeueReusableCellOfClass:(Class)cellClass
+                                          withReuseIdentifier:(nullable NSString *)reuseIdentifier
+                                         forSectionController:(IGListSectionController *)sectionController
+                                                      atIndex:(NSInteger)index;
 
 /**
  Dequeues a cell from the collection view reuse pool.

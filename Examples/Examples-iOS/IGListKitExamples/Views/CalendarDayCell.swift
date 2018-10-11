@@ -12,11 +12,11 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class CalendarDayCell: UICollectionViewCell {
-    
+
     lazy fileprivate var label: UILabel = {
         let view = UILabel()
         view.backgroundColor = .clear
@@ -28,7 +28,7 @@ final class CalendarDayCell: UICollectionViewCell {
         self.contentView.addSubview(view)
         return view
     }()
-    
+
     lazy fileprivate var dotsLabel: UILabel = {
         let view = UILabel()
         view.backgroundColor = .clear
@@ -69,19 +69,19 @@ final class CalendarDayCell: UICollectionViewCell {
 }
 
 extension CalendarDayCell: ListBindable {
-    
+
     func bindViewModel(_ viewModel: Any) {
         guard let viewModel = viewModel as? DayViewModel else { return }
         label.text = viewModel.day.description
-        
+
         label.layer.borderColor = viewModel.today ? UIColor.red.cgColor : UIColor.clear.cgColor
         label.backgroundColor = viewModel.selected ? UIColor.red.withAlphaComponent(0.3) : UIColor.clear
-        
+
         var dots = ""
         for _ in 0..<viewModel.appointments {
             dots += "."
         }
         dotsLabel.text = dots
     }
-    
+
 }

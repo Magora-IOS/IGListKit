@@ -12,19 +12,27 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class UserSectionController: ListSectionController {
 
     private var user: User?
+    private let isReorderable: Bool
+
+    required init(isReorderable: Bool = false) {
+        self.isReorderable = isReorderable
+        super.init()
+    }
 
     override func sizeForItem(at index: Int) -> CGSize {
         return CGSize(width: collectionContext!.containerSize.width, height: 55)
     }
 
     override func cellForItem(at index: Int) -> UICollectionViewCell {
-        let cell = collectionContext!.dequeueReusableCell(of: DetailLabelCell.self, for: self, at: index) as! DetailLabelCell
+        guard let cell = collectionContext?.dequeueReusableCell(of: DetailLabelCell.self, for: self, at: index) as? DetailLabelCell else {
+            fatalError()
+        }
         cell.title = user?.name
         cell.detail = "@" + (user?.handle ?? "")
         return cell
@@ -34,4 +42,7 @@ final class UserSectionController: ListSectionController {
         self.user = object as? User
     }
 
+    override func canMoveItem(at index: Int) -> Bool {
+        return isReorderable
+    }
 }

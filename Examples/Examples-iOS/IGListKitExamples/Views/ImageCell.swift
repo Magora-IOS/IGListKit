@@ -35,7 +35,7 @@ final class ImageCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         contentView.addSubview(activityView)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -43,7 +43,7 @@ final class ImageCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = contentView.bounds
-        activityView.center = CGPoint(x: bounds.width/2.0, y: bounds.height/2.0)
+        activityView.center = CGPoint(x: bounds.width / 2.0, y: bounds.height / 2.0)
         imageView.frame = bounds
     }
 
@@ -55,5 +55,5 @@ final class ImageCell: UICollectionViewCell {
             activityView.startAnimating()
         }
     }
-    
+
 }

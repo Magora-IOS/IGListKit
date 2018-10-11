@@ -12,31 +12,31 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class LabelSectionController: ListSectionController {
-    
+
     var object: String?
-    
+
     override func numberOfItems() -> Int {
         return 1
     }
-    
+
     override func sizeForItem(at index: Int) -> CGSize {
         return CGSize(width: collectionContext!.containerSize.width, height: 55)
     }
-    
+
     override func cellForItem(at index: Int) -> UICollectionViewCell {
-        let cell = collectionContext!.dequeueReusableCell(of: LabelCell.self, for: self, at: index) as! LabelCell
+        guard let cell = collectionContext!.dequeueReusableCell(of: LabelCell.self, for: self, at: index) as? LabelCell else {
+            fatalError()
+        }
         cell.label.text = object
         return cell
     }
-    
+
     override func didUpdate(to object: Any) {
         self.object = String(describing: object)
     }
-    
-    override func didSelectItem(at index: Int) {}
-    
+
 }

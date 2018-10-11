@@ -12,8 +12,8 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class NestedAdapterViewController: UIViewController, ListAdapterDataSource {
 
@@ -45,7 +45,7 @@ final class NestedAdapterViewController: UIViewController, ListAdapterDataSource
         collectionView.frame = view.bounds
     }
 
-    //MARK: ListAdapterDataSource
+    // MARK: ListAdapterDataSource
 
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
         return data as! [ListDiffable]

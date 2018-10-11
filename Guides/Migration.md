@@ -10,7 +10,7 @@ For details on all changes in IGListKit 3.0.0, please see the [release notes](ht
 
 ### "IG" prefix removed for Swift
 
-We have improved how `IGListKit` APIs get imported into Swift. The `IG` prefix has been removed for Swift clients. For example, `IGListSectionController` becomes `ListSectionController` instead. Along with other interoperability improvements, this should make `IGListKit` feel more *swifty*.
+We have improved how `IGListKit` APIs get imported into Swift. The `IG` prefix has been removed for Swift clients. For example, `IGListSectionController` becomes `ListSectionController` instead. Along with other interoperability improvements, this makes `IGListKit` more readable in Swift.
 
 To migrate, use Xcode's Find navigator (command-3), search for `IGList`, and replace with `List`.
 
@@ -46,7 +46,7 @@ Start using `IGListCollectionViewLayout` instead of `IGListGridCollectionViewLay
 - `scrollDirection` is not yet supported. If you need horizontal scrolling, please use `UICollectionViewFlowLayout` or file an issue.
 - Set `minimumLineSpacing` on your [section controllers](https://github.com/Instagram/IGListKit/blob/master/Source/IGListSectionController.h#L59-L64) instead of the layout
 - Set `minimumInteritemSpacing` on your [section controllers](https://github.com/Instagram/IGListKit/blob/master/Source/IGListSectionController.h#L66-L71) instead of the layout
-- Return the size of your cells in [sizeForItemAtIndex:](https://github.com/Instagram/IGListKit/blob/master/Source/IGListSectionType.h#L43-L54) instead of setting it on the layout.
+- Return the size of your cells in [sizeForItemAtIndex:](https://github.com/Instagram/IGListKit/blob/master/Source/IGListSectionController.h#L48) instead of setting it on the layout.
 
 ### Item mutations must be wrapped in `-[IGListCollectionContext performBatchAnimated:completion:]`
 
@@ -75,7 +75,7 @@ collectionContext?.insert(in: self, at: [0])
 
 // NEW
 collectionContext?.performBatch(animated: true, updates: { (batchContext) in
-  self.exanded = true
+  self.expanded = true
   batchContext.insert(in: self, at: [0])
 })
 ```

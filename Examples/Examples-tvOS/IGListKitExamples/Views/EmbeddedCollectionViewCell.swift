@@ -12,11 +12,11 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class EmbeddedCollectionViewCell: UICollectionViewCell {
-    
+
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -27,16 +27,14 @@ final class EmbeddedCollectionViewCell: UICollectionViewCell {
         self.contentView.addSubview(view)
         return view
     }()
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         collectionView.frame = contentView.frame
     }
-  
+
     override var canBecomeFocused: Bool {
-        get {
-            return false
-        }
+        return false
     }
-    
+
 }

@@ -12,11 +12,11 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class MonthTitleCell: UICollectionViewCell {
-    
+
     fileprivate lazy var label: UILabel = {
         let view = UILabel()
         view.backgroundColor = .clear
@@ -35,19 +35,19 @@ final class MonthTitleCell: UICollectionViewCell {
             label.text = newValue
         }
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         label.frame = contentView.bounds
     }
-    
+
 }
 
 extension MonthTitleCell: ListBindable {
-    
+
     func bindViewModel(_ viewModel: Any) {
         guard let viewModel = viewModel as? MonthTitleViewModel else { return }
         label.text = viewModel.name.uppercased()
     }
-    
+
 }

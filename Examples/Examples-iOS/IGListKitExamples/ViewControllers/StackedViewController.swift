@@ -12,8 +12,8 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class StackedViewController: UIViewController, ListAdapterDataSource {
 
@@ -49,7 +49,7 @@ final class StackedViewController: UIViewController, ListAdapterDataSource {
         let sectionController = ListStackedSectionController(sectionControllers: [
             WorkingRangeSectionController(),
             DisplaySectionController(),
-            HorizontalSectionController(),
+            HorizontalSectionController()
             ])
         sectionController.inset = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
         return sectionController

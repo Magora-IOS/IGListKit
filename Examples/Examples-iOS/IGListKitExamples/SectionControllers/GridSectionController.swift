@@ -12,38 +12,51 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import UIKit
 import IGListKit
+import UIKit
 
 final class GridItem: NSObject {
 
     let color: UIColor
     let itemCount: Int
 
+    var items: [String] = []
+
     init(color: UIColor, itemCount: Int) {
         self.color = color
         self.itemCount = itemCount
+
+        super.init()
+
+        self.items = computeItems()
     }
 
+    private func computeItems() -> [String] {
+        return [Int](1...itemCount).map {
+            String(describing: $0)
+        }
+    }
 }
 
 extension GridItem: ListDiffable {
-    
+
     func diffIdentifier() -> NSObjectProtocol {
         return self
     }
-    
+
     func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
         return self === object ? true : self.isEqual(object)
     }
-    
+
 }
 
 final class GridSectionController: ListSectionController {
 
     private var object: GridItem?
+    private let isReorderable: Bool
 
-    override init() {
+    required init(isReorderable: Bool = false) {
+        self.isReorderable = isReorderable
         super.init()
         self.minimumInteritemSpacing = 1
         self.minimumLineSpacing = 1
@@ -60,8 +73,10 @@ final class GridSectionController: ListSectionController {
     }
 
     override func cellForItem(at index: Int) -> UICollectionViewCell {
-        let cell = collectionContext!.dequeueReusableCell(of: CenterLabelCell.self, for: self, at: index) as! CenterLabelCell
-        cell.text = "\(index + 1)"
+        guard let cell = collectionContext?.dequeueReusableCell(of: CenterLabelCell.self, for: self, at: index) as? CenterLabelCell else {
+            fatalError()
+        }
+        cell.text = object?.items[index] ?? "undefined"
         cell.backgroundColor = object?.color
         return cell
     }
@@ -70,4 +85,13 @@ final class GridSectionController: ListSectionController {
         self.object = object as? GridItem
     }
 
+    override func canMoveItem(at index: Int) -> Bool {
+        return isReorderable
+    }
+
+    override func moveObject(from sourceIndex: Int, to destinationIndex: Int) {
+        guard let object = object else { return }
+        let item = object.items.remove(at: sourceIndex)
+        object.items.insert(item, at: destinationIndex)
+    }
 }
