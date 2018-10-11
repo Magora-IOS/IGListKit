@@ -119,9 +119,10 @@ NS_SWIFT_NAME(ListCollectionViewLayout)
                         stretchToEdge:(BOOL)stretchToEdge;
 
 - (instancetype)initWithStickyHeaders:(BOOL)stickyHeaders
+                      scrollDirection:(UICollectionViewScrollDirection)scrollDirection
                       topContentInset:(CGFloat)topContentInset
                         stretchToEdge:(BOOL)stretchToEdge
-                         verticalMode:(BOOL)isVerticalMode;
+                         verticalizationMode:(BOOL)isVerticalMode;
 
 
 /**

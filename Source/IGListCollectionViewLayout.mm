@@ -148,7 +148,7 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
 @property (nonatomic, assign, readonly) BOOL stickyHeaders;
 @property (nonatomic, assign, readonly) CGFloat topContentInset;
 @property (nonatomic, assign, readonly) BOOL stretchToEdge;
-@property (nonatomic, assign, readonly) BOOL isVerticalMode;
+@property (nonatomic, assign, readonly) BOOL isVerticalizationMode;
 
 @end
 
@@ -185,13 +185,14 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
                       scrollDirection:(UICollectionViewScrollDirection)scrollDirection
                       topContentInset:(CGFloat)topContentInset
                         stretchToEdge:(BOOL)stretchToEdge {
-    return [self initWithStickyHeaders:stickyHeaders topContentInset:topContentInset stretchToEdge:stretchToEdge verticalMode:NO];
+    return [self initWithStickyHeaders:stickyHeaders scrollDirection: scrollDirection topContentInset:topContentInset stretchToEdge:stretchToEdge verticalizationMode:NO];
 }
 
 - (instancetype)initWithStickyHeaders:(BOOL)stickyHeaders
+                      scrollDirection:(UICollectionViewScrollDirection)scrollDirection
                       topContentInset:(CGFloat)topContentInset
                         stretchToEdge:(BOOL)stretchToEdge
-                         verticalMode:(BOOL)isVerticalMode {
+                         verticalizationMode:(BOOL)isVerticalizationMode {
     if (self = [super init]) {
         _scrollDirection = scrollDirection;
         _stickyHeaders = stickyHeaders;
@@ -202,7 +203,7 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
                                                                                         UICollectionElementKindSectionHeader: [NSMutableDictionary new],
                                                                                         UICollectionElementKindSectionFooter: [NSMutableDictionary new],
                                                                                         }];
-        _isVerticalMode = isVerticalMode;
+        _isVerticalizationMode = isVerticalizationMode;
         _minimumInvalidatedSection = NSNotFound;
     }
     return self;
@@ -575,32 +576,19 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
 
             // track the max size of the row to find the coord of the next row, adjust for leading inset while iterating items
             nextRowCoordInScrollDirection = MAX(CGRectGetMaxInDirection(frame, self.scrollDirection) - UIEdgeInsetsLeadingInsetInDirection(insets, self.scrollDirection), nextRowCoordInScrollDirection);
-
-            // increase the rolling coord in fixed direction appropriately and add item spacing for all items on the same row
-            itemCoordInFixedDirection += itemLengthInFixedDirection + interitemSpacing;
-/////////////////////////////-----------------
-            const CGRect frame = IGListRectIntegralScaled(CGRectMake(itemX,
-                                                                     itemY + insets.top,
-                                                                     itemWidth,
-                                                                     size.height));
-            sectionData[section].itemBounds[item] = frame;
             
-            // track the max size of the row to find the y of the next row, adjust for top inset while iterating items
-            nextRowY = MAX(CGRectGetMaxY(frame) - insets.top, nextRowY);
-
-            if (self.isVerticalMode && itemCount > 1) {
+            if (self.isVerticalizationMode && itemCount > 1) {
                 if (item == itemCount - 1) {
-                    itemY -= (itemWidth + lineSpacing) * item;
-                    itemX += itemWidth + interitemSpacing;
+                    itemCoordInScrollDirection -= (itemLengthInFixedDirection + lineSpacing) * item;
+                    itemCoordInFixedDirection += itemLengthInFixedDirection + interitemSpacing;
                 } else {
-                    itemY += itemWidth + lineSpacing;;
+                    itemCoordInScrollDirection += itemLengthInFixedDirection + lineSpacing;;
                 }
-
             } else {
-                // increase the rolling x by the item width and add item spacing for all items on the same row
-                itemX += itemWidth + interitemSpacing;
+                // increase the rolling coord in fixed direction appropriately and add item spacing for all items on the same row
+                itemCoordInFixedDirection += itemLengthInFixedDirection + interitemSpacing;
             }
-////////-----------------------
+
             // union the rolling section bounds
             if (item == 0) {
                 rollingSectionBounds = frame;
