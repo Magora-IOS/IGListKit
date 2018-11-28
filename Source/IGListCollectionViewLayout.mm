@@ -590,7 +590,7 @@ static void adjustZIndexForAttributes(UICollectionViewLayoutAttributes *attribut
             }
 
             // union the rolling section bounds
-            if (item == 0) {
+            if (item == 0 && section != sectionCount - 1) {
                 rollingSectionBounds = frame;
             } else {
                 rollingSectionBounds = CGRectUnion(rollingSectionBounds, frame);
